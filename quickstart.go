@@ -129,33 +129,53 @@ func createFile(service *drive.Service, name string, mimeType string, content io
 	return file, nil
 }
 
-func main() () {
+func main() {
 
 	// Step 1. Open the file
 	f, err := os.Open("image.png")
- 
+
 	if err != nil {
-	   panic(fmt.Sprintf("cannot open file: %v", err))
+		panic(fmt.Sprintf("cannot open file: %v", err))
 	}
- 
+
 	defer f.Close()
- 
+
 	// Step 2. Get the Google Drive service
 	service, err := getService()
- 
-	// Step 3. Create the directory
-	dir, err := createDir(service, "My Folder", "root")
- 
-	if err != nil {
-	   panic(fmt.Sprintf("Could not create dir: %v\n", err))
-	}
- 
+
+	// // Step 3. Create the directory
+	// dir, err := createDir(service, "My Folder", "root")
+
+	// if err != nil {
+	// 	panic(fmt.Sprintf("Could not create dir: %v\n", err))
+	// }
+
 	// Step 4. Create the file and upload its content
-	file, err := createFile(service, "uploaded-image.png", "image/png", f, dir.Id)
- 
+	file, err := createFile(service, "uploaded-image.png", "image/png", f, "1RnhJT0aUzzmD-pZy_wppMup3IIGmEkeA")
+
+	fmt.Println(file.Id)
+
 	if err != nil {
-	   panic(fmt.Sprintf("Could not create file: %v\n", err))
+		panic(fmt.Sprintf("Could not create file: %v\n", err))
 	}
- 
-	fmt.Printf("File '%s' successfully uploaded in '%s' directory", file.Name,  dir.Name)
- }
+
+	fmt.Printf("File '%s' successfully uploaded in '%s' directory", file.Name, "My File")
+
+	CallLink(file.Id)
+}
+
+//CallLink CallLink
+func CallLink(fileID string) {
+
+	_, err := http.Get(fmt.Sprintf("https://drive.google.com/uc?export=view&id=%s", fileID))
+
+	fmt.Println("")
+	fmt.Println("https://drive.google.com/uc?export=view&id=" + fileID)
+	fmt.Println("")
+
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+}
